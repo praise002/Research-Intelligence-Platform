@@ -1,0 +1,31 @@
+-r base.txt
+
+# ── Testing ───────────────────────────────────────────────────────────────────
+pytest==9.1.0
+pytest-asyncio==1.4.0
+iniconfig==2.3.0
+pluggy==1.6.0
+testcontainers==4.14.2
+docker==7.1.0              # required by testcontainers
+
+# ── Linting / Formatting ──────────────────────────────────────────────────────
+ruff==0.15.17
+
+# ── Dev Server ────────────────────────────────────────────────────────────────
+watchfiles==1.2.0          # uvicorn --reload file watcher
+
+# ── Celery Monitoring ─────────────────────────────────────────────────────────
+flower==2.0.1
+tornado==6.5.7             # flower dependency
+humanize==4.15.0           # flower dependency
+
+# ── Evaluation & Testing ──────────────────────────────────────────────────────
+ragas==0.4.3               # RAG pipeline evaluation
+promptfoo==0.1.4           # prompt regression testing
+
+# ── CLI / Dev UX ──────────────────────────────────────────────────────────────
+rich==14.3.4
+Pygments==2.20.0           # rich dependency
+prompt_toolkit==3.0.52
+wcwidth==0.8.1             # prompt_toolkit dependency
+shellingham==1.5.4         # typer shell detection (dev CLI only)

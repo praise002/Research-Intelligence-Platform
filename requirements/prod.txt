@@ -1,0 +1,4 @@
+-r base.txt
+
+# ── Production WSGI/ASGI Server ───────────────────────────────────────────────
+gunicorn==23.0.0           # process manager — wraps uvicorn workers in production
