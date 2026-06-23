@@ -630,6 +630,8 @@ POST   /research/trigger             -- manually trigger an on-demand report
 ```
 GET    /schedule                     -- view current schedule settings
 PATCH  /schedule                     -- update frequency, pause or resume
+POST /schedule/run-now, that reuses the exact same fan-out logic scheduler_task.py already has for WF1 — same pipeline, just triggered immediately instead of waiting for the next scheduled time. That's a cleaner conceptual fit than overloading /research/trigger.
+
 ```
 
 ### Admin

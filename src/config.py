@@ -62,6 +62,9 @@ class Settings(BaseSettings):
     # All models accessed through OpenRouter — swap model by changing the string.
     OPENROUTER_API_KEY: str
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
+    
+    OPENAI_API_KEY: str
+    GEMINI_API_KEY: str
 
     # Model assignments — each role uses a different model for cost and quality
     SYNTHESIS_MODEL: str = "anthropic/claude-sonnet-4-6"       # merges sources, writes report
@@ -100,7 +103,7 @@ class Settings(BaseSettings):
     # ── Timeouts (seconds) 
     LLM_TIMEOUT: int = 60             # synthesis can take up to 60s for large source sets
     TAVILY_TIMEOUT: int = 30
-    APIFY_TIMEOUT: int = 45
+    APIFY_TIMEOUT: int = 310
 
     # ── Research Agent Configuration 
     MAX_RESEARCH_LOOPS: int = 3       # LangGraph loop limit — refine query max 3 times

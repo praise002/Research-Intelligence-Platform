@@ -53,8 +53,7 @@ class BaseRepository(Generic[ModelType]):
         without overwriting untouched fields with null.
         """
         for field, value in updates.items():
-            if value is not None:
-                setattr(obj, field, value)
+            setattr(obj, field, value)
         self.db.add(obj)
         await self.db.commit()
         await self.db.refresh(obj)

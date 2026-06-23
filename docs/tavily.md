@@ -174,3 +174,72 @@ CRAWL
   "response_time": 0.17,
   "request_id": "49c68bb5-293b-4031-9689-3656c28fdcd0"
 }
+
+
+Viewed tavily_client.py:30-78
+
+I'll read the beginning of [tavily.md](file:///home/praizdev/Documents/back-end/ai/Automated%20Research%20&%20Competitive%20Intelligence%20Platform/docs/tavily.md) to inspect the API response samples documented there and see if it is returning full markdown content.
+
+Viewed tavily.md:1-100
+
+I will view the rest of `docs/tavily.md` to see the results of extract/other endpoints.
+
+Viewed tavily.md:100-176
+
+Yes! Based on the sample responses documented in [tavily.md](file:///home/praizdev/Documents/back-end/ai/Automated%20Research%20&%20Competitive%20Intelligence%20Platform/docs/tavily.md), Tavily returns full content in markdown format depending on the endpoint and settings:
+
+### 1. `/extract` Endpoint (and `/crawl`)
+Yes, it returns the **full content in clean Markdown**. 
+* In the `Extract` sample (line 106) and `CRAWL` sample (line 139), you can see that the `"raw_content"` field contains parsed markdown elements, including:
+  * Headers (`#`, `##`, `###`)
+  * Markdown links (`[Link Text](url)`)
+  * Image tags (`![Image Alt](url)`)
+  * Lists (`*`)
+  * Tables (`| ... |`)
+
+### 2. `/search` Endpoint
+By default, the standard `/search` returns short snippets of text in the `"content"` field. 
+* The `"raw_content"` field for `/search` results is `null` in the sample (line 7).
+* *Note:* If you want full markdown content directly from the `/search` endpoint, Tavily requires setting `"include_raw_content": true` in the search query payload, which then populates `"raw_content"` with the full page in markdown (similar to what `/extract` returns).
+
+3. Should we use include_raw_content: true or stick to the current plan?
+The current plan in BUILD_PLAN.md recommends:
+
+Run tavily.search() to get the list of URLs and snippets.
+Run the source_validator node (Phase 8.4) to score and filter these URLs (discarding duplicate pages, spam, low-relevance domains, or old articles).
+Only call tavily.extract() on the validated, high-quality URLs (e.g., top 3–5).
+
+Edited tavily_client.py
+Edited tavily_client.py
+Viewed tavily.md:102-112
+
+I will look at the current implementation of the `extract` method in [tavily_client.py](file:///home/praizdev/Documents/back-end/ai/Automated%20Research%20&%20Competitive%20Intelligence%20Platform/providers/tavily_client.py#L71-L120) to see what it accepts and how it's currently structured.
+
+Viewed tavily_client.py:70-125
+
+Based on the OpenAPI spec for **Tavily Extract**, here are the key parameters we should consider adding to our `extract` method, along with their pros, cons, and how they benefit our platform:
+
+---
+
+### 1. `extract_depth` (`"basic"` vs `"advanced"`)
+*   **What it does:** `"basic"` uses standard scraping. `"advanced"` scrapes deeper, handles complex JS-rendered pages, and extracts embedded elements like tables.
+*   **Pros:** Competitor pricing pages and features are almost always structured as **tables**. Using `"advanced"` ensures we don't miss pricing tiers or comparison checklists.
+*   **Cons:** Twice as expensive (2 credits per 5 URLs instead of 1 credit per 5 URLs) and has slightly higher latency (30s timeout vs 10s).
+*   **Recommendation:** Make it configurable (defaulting to `"basic"`), but set it to `"advanced"` specifically when crawling known product, pricing, or feature pages.
+
+### 2. `query` & `chunks_per_source` (Relevance Reranking & Chunking)
+*   **What it does:** If a search query is passed, Tavily won't return the full webpage. Instead, it chunks the page into 500-character snippets, ranks them by relevance to the query, and returns only the top $N$ chunks (defined by `chunks_per_source`, up to 5).
+*   **Pros:** 
+    *   **Massive LLM Token Savings:** Prevents scraping 20,000+ words of unrelated content (e.g. cookie policy, footers, sidebars).
+    *   **Higher Synthesis Precision:** Focuses the LLM only on the relevant text chunks.
+*   **Cons:** Destroys page structure. If you are scraping a pricing page, you want the *entire* table context, not just 3 disjointed chunks containing dollar signs.
+*   **Recommendation:** Use the `query` parameter *only* when scraping long news articles, blog posts, or broad documentation where we need specific facts. Keep it `None` when scraping core competitor landing/pricing/feature pages to get the full markdown structure.
+
+### 3. `include_favicon` (Boolean)
+*   **What it does:** Returns the URL of the website's favicon.
+*   **Pros:** Nice UI improvement. We can display the competitor's or news source's logo next to citations in the frontend.
+*   **Cons:** None.
+*   **Recommendation:** Set to `True` or make it an optional boolean.
+
+---
+

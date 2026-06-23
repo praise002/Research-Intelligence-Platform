@@ -61,26 +61,26 @@ Build progress tracker. Check off each step as completed.
 
 ## Phase 3: External Service Providers
 
-- [ ] **3.1** Create `src/providers/tavily_client.py`
+- [X] **3.1** Create `src/providers/tavily_client.py`
   - Tavily API client wrapper
   - Methods: search(query), extract(urls), map_site(url)
   - Tenacity retry (3 attempts, exponential backoff 1s → 2s → 4s)
   - Fallback flag when Tavily fails — triggers Serper fallback
 
-- [ ] **3.2** Create `src/providers/apify_client.py`
+- [X] **3.2** Create `src/providers/apify_client.py`
   - Apify client for social media scraping
   - Methods: scrape_twitter(query), scrape_reddit(query), scrape_linkedin(query)
   - Tenacity retry (3 attempts)
   - Graceful degradation — continue without social data if unavailable
 
-- [ ] **3.3** Create `src/providers/llm_client.py`
+- [X] **3.3** Create `src/providers/llm_client.py`
   - OpenRouter client — single interface for all models
   - Methods: call_synthesis(prompt), call_evaluator(prompt), call_router(prompt), call_query_generator(prompt)
   - Model mapping: synthesis → Claude Sonnet 4.6, evaluator → Gemini 2.5 Flash, router/query → Claude Haiku
   - Fallback chain: primary model → DeepSeek V3 on failure
   - Tenacity retry on 429 and 500 errors
 
-- [ ] **3.4** Create `src/providers/redis_client.py`
+- [X] **3.4** Create `src/providers/redis_client.py`
   - Redis async client
   - Methods: get(key), set(key, value, ttl), delete(key), exists(key)
   - TTL constants: NEWS_TTL = 86400 (24hrs), WEBSITE_TTL = 604800 (7 days)
@@ -89,12 +89,6 @@ Build progress tracker. Check off each step as completed.
 ---
 
 ## Phase 4: Middleware & Request Handling
-
-- [ ] **4.1** Create `src/middleware/auth.py`
-  - Extract Bearer token from Authorization header
-  - Decode JWT (user_id, email) — verify signature
-  - Store decoded data in request.state
-  - No valid token → 401
 
 - [ ] **4.2** Create `src/middleware/cors.py`
   - CORS middleware with ALLOWED_ORIGINS whitelist
