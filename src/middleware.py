@@ -57,8 +57,10 @@ def register_middleware(app: FastAPI) -> None:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        # allow_methods=["*"],
+        # allow_headers=["*"],
+        allow_methods=["GET", "POST", "PATCH", "DELETE"],
+        allow_headers=["Authorization", "Content-Type"],
         # allow_credentials=True,  # cross-origin for frontend
     )
 

@@ -90,11 +90,11 @@ Build progress tracker. Check off each step as completed.
 
 ## Phase 4: Middleware & Request Handling
 
-- [ ] **4.2** Create `src/middleware/cors.py`
+- [X] **4.2** Create `src/middleware/cors.py`
   - CORS middleware with ALLOWED_ORIGINS whitelist
   - Allow React frontend URL only
 
-- [ ] **4.3** Create `src/middleware/request_logging.py`
+- [X] **4.3** Create `src/middleware/request_logging.py`
   - Log each request: method, path, user_id, correlation_id
   - Log response: status code, duration_ms
   - Attach correlation ID to request.state for downstream tracing
@@ -103,12 +103,12 @@ Build progress tracker. Check off each step as completed.
   - generate_correlation_id() — UUID4 per request and Celery task
   - Propagate correlation ID from FastAPI → Celery → LangGraph nodes → LangSmith
 
-- [ ] **4.5** Create `src/utils/cache.py`
+- [X] **4.5** Create `src/utils/cache.py`
   - Redis cache helpers: get_cached, set_cached, invalidate
   - TTL constants imported from redis_client
   - Cache key builder: build_cache_key(competitor_name, source_type, date)
 
-- [ ] **4.6** Create `src/utils/pagination.py`
+- [X] **4.6** Create `src/utils/pagination.py`
   - Shared pagination: skip, limit params
   - PaginatedResponse schema — used by reports, alerts, admin logs
 
