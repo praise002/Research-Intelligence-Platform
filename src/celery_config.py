@@ -1,9 +1,9 @@
-from config import settings
+from src.config import settings
 from celery import Celery
 # from celery.schedules import crontab
 
 celery_app = Celery(
-    "tasks",
+    "src.tasks",
     broker=settings.REDIS_URL,
     backend=settings.REDIS_URL,
     broker_connection_retry_on_startup=True,

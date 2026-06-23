@@ -30,18 +30,19 @@ def empty_to_none(v: Any) -> Any:
 
 class Settings(BaseSettings):
     """
-    Global configuration for Reve AI — Automated Research & Competitive Intelligence Platform.
+    Global configuration for Reve Research AI — Automated Research & Competitive Intelligence Platform.
     All values loaded from .env file. Never hardcode secrets here.
     """
 
     # ── Application 
-    PROJECT_NAME: str = "Reve AI"
+    PROJECT_NAME: str = "Reve Research AI"
     API_V1_STR: str = "/api/v1"
     ENVIRONMENT: Literal["local", "test", "production"] = "local"
     DOMAIN: str = "localhost"
     SECRET_KEY: str = secrets.token_urlsafe(32)
     
     FRONTEND_CALLBACK_URL: str
+    FRONTEND_HOST: str = "http://localhost:5173"
 
     # ── Database 
     # Either provide DATABASE_URL directly or all POSTGRES_* variables.
@@ -131,7 +132,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     LANGCHAIN_TRACING_V2: bool = False     # set True in staging/prod to enable LangSmith
     LANGCHAIN_API_KEY: str = ""            # LangSmith API key
-    LANGCHAIN_PROJECT: str = "Reve AI"
+    LANGCHAIN_PROJECT: str = "Reve Research AI"
     SENTRY_DSN: Annotated[HttpUrl | None, BeforeValidator(empty_to_none)] = None
 
     # ── CORS 

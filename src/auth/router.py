@@ -21,7 +21,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Request, status
 from fastapi.responses import RedirectResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from config import settings
+from src.config import settings
 from src.auth.config import auth_settings
 from src.auth.dependencies import (
     RefreshTokenBearer,

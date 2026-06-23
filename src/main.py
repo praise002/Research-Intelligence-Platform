@@ -14,6 +14,7 @@ from fastapi.templating import Jinja2Templates
 from starlette_admin.contrib.sqla import Admin
 from tenacity import retry, stop_after_delay, wait_fixed
 
+from src.auth.router import router as auth_router
 from src.config import settings
 from src.custom_logging import get_logger, setup_logging
 from src.db.database import async_engine, init_db
@@ -38,7 +39,9 @@ if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
     sentry_sdk.init(dsn=str(settings.SENTRY_DSN), enable_tracing=True)
 
 description = """
-## A FastAPI middleware service that acts as a single intelligent AI-powered chat endpoint for the Nuwell nutrition app.
+## Automated Research & Competitive Intelligence Platform API
+
+An intelligent platform for automating research and gathering competitive intelligence.
 """
 
 version = "v1"
@@ -82,7 +85,7 @@ templates = Jinja2Templates(env=env)
 # app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Create admin
-admin = Admin(async_engine, title="Reve AI")
+admin = Admin(async_engine, title="Reve Research AI")
 
 # Add view
 # admin.add_view(ModelView(User, icon="fas fa-user"))
@@ -90,7 +93,7 @@ admin = Admin(async_engine, title="Reve AI")
 # Mount admin to your app
 admin.mount_to(app)
 
-# app.include_router(chat_router, prefix=f"/api/{version}", tags=["Chat"])
+app.include_router(auth_router, prefix=f"/api/{version}/auth", tags=["Auth"])
 
 
 @retry(stop=stop_after_delay(30), wait=wait_fixed(1))

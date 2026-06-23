@@ -506,6 +506,9 @@ competitors
   name        text          -- e.g. "Grey"
   main_url    text          -- e.g. "grey.com" — user provides this during onboarding
   created_at  timestamp
+  
+users (1) ──────< competitors (many)
+  id ◄──────────── user_id
 
 -- Individual pages discovered for each competitor
 competitor_sources
@@ -515,6 +518,9 @@ competitor_sources
   source_type     text      -- website / social / news / review
   last_scraped_at timestamp -- when we last fetched this URL
   created_at      timestamp
+
+competitors (1) ──────< competitor_sources (many)
+  id ◄──────────────────── competitor_id
 
 -- Generated reports
 reports
@@ -570,7 +576,8 @@ schedules
   created_at    timestamp
   updated_at    timestamp
 ```
-
+competitors (1) ────< reports (many)      ← one competitor has many reports generated
+reports (1) ─────── feedback (1)          ← one report has exactly ONE feedback (per docstring)
 ---
 
 ## API Endpoints

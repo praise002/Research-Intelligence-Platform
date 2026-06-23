@@ -38,7 +38,7 @@ Build progress tracker. Check off each step as completed.
   - Session factory with connection pool (max 20 connections)
   - pool_pre_ping=True for connection health checks
 
-- [ ] **2.2** Create all SQLModel table models
+- [X] **2.2** Create all SQLModel table models
   - `src/auth/models.py` — User table
   - `src/competitors/models.py` — Competitor, CompetitorSource tables
   - `src/reports/models.py` — Report, Feedback tables
@@ -46,13 +46,13 @@ Build progress tracker. Check off each step as completed.
   - `src/research/models.py` — Job table
   - `src/schedule/models.py` — Schedule table
 
-- [ ] **2.3** Set up Alembic for migrations
+- [X] **2.3** Set up Alembic for migrations
   - `alembic init -t async migrations`
   - Configure `alembic.ini` with async engine
   - Set file template: `%%(year)d-%%(month).2d-%%(day).2d_%%(slug)s`
   - Generate and run initial migration for all tables
 
-- [ ] **2.4** Create `src/repositories/base_repository.py`
+- [X] **2.4** Create `src/repositories/base_repository.py`
   - Abstract base CRUD class — create, get_by_id, update, delete, list
   - All module repositories inherit from this
   - Async SQLAlchemy session injection via dependency

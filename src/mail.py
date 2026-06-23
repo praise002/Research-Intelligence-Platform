@@ -6,7 +6,7 @@ from fastapi_mail import FastMail, MessageSchema, MessageType
 from mjml import mjml2html
 
 from src.auth.config import conf
-from src.config import Config
+from src.config import settings
 
 # NOTE: MOVE TO CELERY IF I REQUIRE RELIABILITY & SCALING
 
@@ -117,8 +117,8 @@ def send_email_by_type(
     # Build template context
     template_context = {
         "name": name,
-        "project_name": Config.PROJECT_NAME,
-        "frontend_host": Config.FRONTEND_HOST,
+        "project_name": settings.PROJECT_NAME,
+        "frontend_host": settings.FRONTEND_HOST,
     }
     if otp:
         template_context["otp"] = str(otp)
@@ -141,7 +141,7 @@ class EmailData:
 def generate_test_email(email_to: str) -> EmailData:
     email_data = get_email_template_data("test")
     template_context = {
-        "project_name": Config.PROJECT_NAME,
+        "project_name": settings.PROJECT_NAME,
         "email": email_to,
     }
 
