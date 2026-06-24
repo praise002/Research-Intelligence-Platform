@@ -20,6 +20,7 @@ from src.db.models import User
 
 
 class AuthRepository:
+    """CRUD operations for the User model."""
 
     async def get_by_id(self, user_id: str, session: AsyncSession) -> User | None:
         statement = (
@@ -47,14 +48,14 @@ class AuthRepository:
 
         return new_user
 
-    # async def update(
-    #     self, user: User, data: dict, session: AsyncSession
-    # ) -> User:
-    #     """Apply a partial update dict to a user and persist it."""
-    #     for key, value in data.items():
-    #         setattr(user, key, value)
-    #     await session.commit()
-    #     return user
+    async def update(
+        self, user: User, data: dict, session: AsyncSession
+    ) -> User:
+        """Apply a partial update dict to a user and persist it."""
+        for key, value in data.items():
+            setattr(user, key, value)
+        await session.commit()
+        return user
 
     async def exists_by_email(self, email: str, session: AsyncSession) -> bool:
         return await self.get_by_email(email, session) is not None

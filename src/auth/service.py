@@ -15,37 +15,29 @@ these methods and convert the results into HTTP responses.
 
 from src.auth.errors import UserNotActive
 from src.auth.redis import RedisService
-from src.auth.repository import UserRepository
+from src.auth.repository import AuthRepository
 from src.auth.schemas import UserCreateOAuth
-from src.auth.security import (
-    create_access_token,
-    create_refresh_token,
-    decode_token,
-)
+from src.auth.security import create_access_token, create_refresh_token, decode_token
 from src.db.models import User
 
 # Shared repository instances (stateless, safe to share)
 
-_user_repo = UserRepository()
+_user_repo = AuthRepository()
 
 # Redis TTL matching REFRESH_TOKEN_EXPIRY config (90 days in seconds)
 _REFRESH_TTL_SECONDS = 7_776_000
 
 
-class UserService:
+class AuthService:
     """
     Orchestrates user-related business operations.
 
-    Depends inward on UserRepository for data access and
+    Depends inward on AuthRepository for data access and
     on infrastructure/security for token creation. Returns domain objects
     or plain dicts — never FastAPI Response objects (that's the controller's job).
     """
     
-   
-
-    # ------------------------------------------------------------------
     # Queries (read-only)
-    # ------------------------------------------------------------------
 
     async def get_user(self, user_id: str, session) -> User | None:
         return await _user_repo.get_by_id(user_id, session)
@@ -57,16 +49,12 @@ class UserService:
         return await _user_repo.exists_by_email(email, session)
 
 
-    # ------------------------------------------------------------------
     # User mutations
-    # ------------------------------------------------------------------
 
-    async def update_user(self, user: User, data: dict, session) -> User:
-        return await _user_repo.update(user, data, session)
+    # async def update_user(self, user: User, data: dict, session) -> User:
+    #     return await _user_repo.update(user, data, session)
 
-    # ------------------------------------------------------------------
     # Token management
-    # ------------------------------------------------------------------
 
     async def create_token_pair(self,  user_data: dict,  _session, redis: RedisService) -> dict:
         """

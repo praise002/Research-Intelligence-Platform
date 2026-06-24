@@ -116,31 +116,31 @@ Build progress tracker. Check off each step as completed.
 
 ## Phase 5: Auth Module
 
-- [ ] **5.1** Create `src/auth/schemas.py`
+- [X] **5.1** Create `src/auth/schemas.py`
   - GoogleAuthRequest (google_token)
   - TokenResponse (access_token, token_type, user)
   - UserResponse (id, email, name, company, plan)
 
-- [ ] **5.2** Create `src/auth/repository.py`
+- [X] **5.2** Create `src/auth/repository.py`
   - get_user_by_email(email) → User | None
   - create_user(email, name, company) → User
   - Inherits from base_repository
 
-- [ ] **5.3** Create `src/auth/service.py`
+- [X] **5.3** Create `src/auth/service.py`
   - verify_google_token(google_token) → Google user payload
   - get_or_create_user(google_payload) → User
   - create_access_token(user_id) → JWT string
   - invalidate_token(token) → void (store in Redis blocklist)
 
-- [ ] **5.4** Create `src/auth/dependencies.py`
+- [X] **5.4** Create `src/auth/dependencies.py`
   - get_current_user() — decode JWT, fetch user from DB
   - Injected into all protected routes via Annotated[User, Depends(...)]
 
-- [ ] **5.5** Create `src/auth/exceptions.py` and `src/auth/errors.py`
+- [X] **5.5** Create `src/auth/exceptions.py` and `src/auth/errors.py`
   - InvalidToken, UserNotFound, TokenExpired
   - AUTH_001: Invalid token, AUTH_002: User not found, AUTH_003: Token expired
 
-- [ ] **5.6** Create `src/auth/router.py`
+- [X] **5.6** Create `src/auth/router.py`
   - POST /auth/google — verify Google token, return JWT
   - POST /auth/logout — add token to Redis blocklist
 
@@ -148,19 +148,19 @@ Build progress tracker. Check off each step as completed.
 
 ## Phase 6: Competitors Module
 
-- [ ] **6.1** Create `src/competitors/schemas.py`
+- [X] **6.1** Create `src/competitors/schemas.py`
   - CompetitorCreate (name, main_url)
   - CompetitorUpdate (name?, main_url?)
   - CompetitorResponse (id, name, main_url, sources, created_at)
   - SourceResponse (id, url, source_type, last_scraped_at)
 
-- [ ] **6.2** Create `src/competitors/repository.py`
+- [X] **6.2** Create `src/competitors/repository.py`
   - CRUD for competitors table
   - CRUD for competitor_sources table
   - get_all_by_user(user_id) → list[Competitor]
   - get_sources_by_competitor(competitor_id) → list[CompetitorSource]
 
-- [ ] **6.3** Create `src/competitors/service.py`
+- [X] **6.3** Create `src/competitors/service.py`
   - add_competitor(user_id, name, main_url) → Competitor
   - discover_sub_urls(main_url) → list[str]
     - Check robots.txt → extract sitemap URL
@@ -170,15 +170,15 @@ Build progress tracker. Check off each step as completed.
   - save_discovered_sources(competitor_id, urls) → list[CompetitorSource]
   - update_competitor / delete_competitor
 
-- [ ] **6.4** Create `src/competitors/dependencies.py`
+- [X] **6.4** Create `src/competitors/dependencies.py`
   - valid_competitor_id() — validates competitor exists and belongs to current user
   - Returns competitor or raises CompetitorNotFound
 
-- [ ] **6.5** Create `src/competitors/exceptions.py` and `src/competitors/errors.py`
+- [X] **6.5** Create `src/competitors/exceptions.py` and `src/competitors/errors.py`
   - CompetitorNotFound, CompetitorAlreadyExists
   - COMP_001: Not found, COMP_002: Already exists
 
-- [ ] **6.6** Create `src/competitors/router.py`
+- [X] **6.6** Create `src/competitors/router.py`
   - GET /competitors — list all competitors for current user
   - POST /competitors — add competitor + trigger sub-URL discovery
   - GET /competitors/{id} — get one competitor with sources

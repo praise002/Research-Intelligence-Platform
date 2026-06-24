@@ -96,7 +96,7 @@ class RedisClient:
                 raise RateLimitExceeded()
         """
         try:
-            count = await self.redis.incr(key)
+            count = await self.redis.incr(key)  # type: ignore
             if count == 1:
                 await self.redis.expire(key, ttl)
             return count

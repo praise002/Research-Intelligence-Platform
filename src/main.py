@@ -15,6 +15,7 @@ from starlette_admin.contrib.sqla import Admin
 from tenacity import retry, stop_after_delay, wait_fixed
 
 from src.auth.router import router as auth_router
+from src.competitors.router import router as competitors_router
 from src.config import settings
 from src.custom_logging import get_logger, setup_logging
 from src.db.database import async_engine, init_db
@@ -94,7 +95,7 @@ admin = Admin(async_engine, title="Reve Research AI")
 admin.mount_to(app)
 
 app.include_router(auth_router, prefix=f"/api/{version}/auth", tags=["Auth"])
-
+app.include_router(competitors_router, prefix=f"/api/{version}/competitors", tags=["Competitors"])
 
 @retry(stop=stop_after_delay(30), wait=wait_fixed(1))
 async def wait_for_db():

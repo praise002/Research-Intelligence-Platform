@@ -3,7 +3,7 @@ from httpx import AsyncClient
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from auth.redis import RedisService
-from src.auth.service import UserService
+from src.auth.service import AuthService
 from src.db.models import Otp, User
 
 
@@ -31,7 +31,7 @@ class TestUserRegistration:
         assert response_data["email"] == valid_user_data["email"]
 
         # Assert: Check database
-        user_service = UserService()
+        user_service = AuthService()
         user = await user_service.get_user_by_email(
             valid_user_data["email"], db_session
         )
@@ -168,7 +168,7 @@ class TestUserRegistration:
         assert response.status_code == 201
 
         # Check password is hashed (not stored in plain text)
-        user_service = UserService()
+        user_service = AuthService()
         user = await user_service.get_user_by_email(
             another_user_data["email"], db_session
         )
@@ -209,7 +209,7 @@ class TestEmailVerification:
         assert "verified" in response_data["message"]
 
         # Assert: Check user is verified in database
-        user_service = UserService()
+        user_service = AuthService()
         
         updated_user = await user_service.get_user_by_email(
             registered_user.email, db_session
@@ -258,7 +258,7 @@ class TestEmailVerification:
         assert response_data["err_code"] == "invalid_otp"
 
         # Assert: User should still be unverified
-        user_service = UserService()
+        user_service = AuthService()
         user = await user_service.get_user_by_email(registered_user.email, db_session)
         assert user.is_email_verified is False  # type: ignore
 
@@ -404,7 +404,7 @@ class TestResendVerificationEmail:
         email_data = mock_email[0]
         assert email_data["template_name"] == "verify_email_request.mjml"
 
-        user_service = UserService()
+        user_service = AuthService()
         # Assert: There should be exactly ONE new OTP for the user
         all_otps = await user_service.get_user_otps(str(registered_user.id), db_session)
         print(all_otps)
@@ -797,9 +797,9 @@ class TestLogoutAll:
 
         # Assert: All refresh tokens should now be blacklisted
         # Try to use refresh token from session 2
-        from src.auth.service import UserService
+        from src.auth.service import AuthService
 
-        user_service = UserService()
+        user_service = AuthService()
 
         # Decode tokens to get JTIs
         from src.auth.security import decode_token
@@ -1415,7 +1415,7 @@ class TestPasswordResetComplete:
         assert response_data["status"] == "success"
         assert "proceed to login" in response_data["message"].lower()
 
-        user_service = UserService()
+        user_service = AuthService()
         updated_user = await user_service.get_user_by_email(
             verified_user.email, db_session
         )
@@ -1651,7 +1651,7 @@ class TestPasswordChange:
         assert "access" in response_data
         assert "refresh" in response_data
 
-        user_service = UserService()
+        user_service = AuthService()
         updated_user = await user_service.get_user_by_email(
             verified_user.email, db_session
         )

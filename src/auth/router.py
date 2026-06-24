@@ -21,7 +21,6 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Request, status
 from fastapi.responses import RedirectResponse
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.config import settings
 from src.auth.config import auth_settings
 from src.auth.dependencies import (
     RefreshTokenBearer,
@@ -29,9 +28,7 @@ from src.auth.dependencies import (
     get_current_user,
     get_redis,
 )
-from src.auth.errors import (
-    GoogleAuthenticationFailed,
-)
+from src.auth.errors import GoogleAuthenticationFailed
 from src.auth.oauth_config import oauth
 from src.auth.redis import RedisService
 from src.auth.schema_examples import (
@@ -39,16 +36,15 @@ from src.auth.schema_examples import (
     LOGOUT_RESPONSES,
     REFRESH_TOKEN_RESPONSES,
 )
-from src.auth.schemas import (
-    UserCreateOAuth,
-)
-from src.auth.service import UserService
+from src.auth.schemas import UserCreateOAuth
+from src.auth.service import AuthService
+from src.config import settings
 from src.db.database import get_session
 from src.mail import send_email_by_type
 
 router = APIRouter()
 
-_user_service = UserService()
+_user_service = AuthService()
 role_checker = RoleChecker(["admin", "user"])
 
 

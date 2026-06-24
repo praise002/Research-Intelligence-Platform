@@ -291,8 +291,8 @@ async def registered_user(
     db_session: AsyncSession,
     user2_data: dict,
 ):
-    from src.auth.service import UserService
-    user_service = UserService()
+    from src.auth.service import AuthService
+    user_service = AuthService()
     user_create = UserCreate(**user2_data)
     user = await user_service.create_user(user_create, db_session)
     return user
@@ -303,8 +303,8 @@ async def verified_user(
     db_session: AsyncSession,
     user3_data: dict,
 ):
-    from src.auth.service import UserService
-    user_service = UserService()
+    from src.auth.service import AuthService
+    user_service = AuthService()
     user_create = UserCreate(**user3_data)
     user = await user_service.create_user(user_create, db_session)
     await user_service.update_user(user, {"is_email_verified": True}, db_session)
@@ -316,8 +316,8 @@ async def another_verified_user(
     db_session: AsyncSession,
     valid_user_data: dict,
 ):
-    from src.auth.service import UserService
-    user_service = UserService()
+    from src.auth.service import AuthService
+    user_service = AuthService()
     user_create = UserCreate(**valid_user_data)
     user = await user_service.create_user(user_create, db_session)
     await user_service.update_user(user, {"is_email_verified": True}, db_session)
@@ -329,8 +329,8 @@ async def inactive_user(
     db_session: AsyncSession,
     another_user_data: dict,
 ):
-    from src.auth.service import UserService
-    user_service = UserService()
+    from src.auth.service import AuthService
+    user_service = AuthService()
     user_create = UserCreate(**another_user_data)
     user = await user_service.create_user(user_create, db_session)
     await user_service.update_user(

@@ -26,7 +26,7 @@ from src.auth.errors import (
 )
 from src.auth.redis import RedisService
 from src.auth.security import decode_token
-from src.auth.service import UserService
+from src.auth.service import AuthService
 from src.db.database import get_session
 from src.db.models import User
 from src.exceptions import InsufficientPermission
@@ -41,8 +41,8 @@ def get_redis(request: Request) -> RedisService:
 # It returns None if no auth header so we need the check below
 # if creds is None:
 
-def get_user_service() -> UserService:
-    return UserService()
+def get_user_service() -> AuthService:
+    return AuthService()
 
 class TokenBearer(HTTPBearer):
     """
@@ -95,7 +95,7 @@ class RefreshTokenBearer(TokenBearer):
 
     async def __call__(
         self, request: Request, session: AsyncSession = Depends(get_session),
-        user_service: UserService = Depends(get_user_service),
+        user_service: AuthService = Depends(get_user_service),
         redis: RedisService = Depends(get_redis),
     ) -> Any:
         # Bypass parent __call__ so we can do the async Redis check ourselves
@@ -126,7 +126,7 @@ class RefreshTokenBearer(TokenBearer):
 async def get_current_user(
     token_details: dict = Depends(AccessTokenBearer()),
     session: AsyncSession = Depends(get_session),
-    user_service: UserService = Depends(get_user_service),
+    user_service: AuthService = Depends(get_user_service),
 ) -> User:
     """
     Resolves the authenticated User from an access token.
