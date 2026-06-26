@@ -1,10 +1,10 @@
-class BaseException(Exception):
+class ARCIPError(Exception):
     """This is the base class for all ARCIP errors"""
 
     pass
 
 
-class UnprocessableEntity(BaseException):
+class UnprocessableEntity(ARCIPError):
     """
     Raised when the request is well-formed but contains semantic errors
     that prevent processing.
@@ -27,7 +27,7 @@ class UnprocessableEntity(BaseException):
         super().__init__(self.message)
 
 
-class InsufficientPermission(BaseException):
+class InsufficientPermission(ARCIPError):
     """
     Raised when a resource does not belong to the current user,
     or an admin-only endpoint is accessed by a non-admin.
@@ -41,7 +41,7 @@ class InsufficientPermission(BaseException):
         super().__init__(self.message)
 
 
-class NotFound(BaseException):
+class NotFound(ARCIPError):
     """
     Generic not found exception — used for competitor, report, alert,
     and schedule lookups that fail or don't belong to the current user.
@@ -54,7 +54,7 @@ class NotFound(BaseException):
 
 # Auth errors — raised during Google OAuth verification or JWT decoding
 
-class AuthError(BaseException):
+class AuthError(ARCIPError):
     """
     Raised when a request's JWT is missing, invalid, or expired.
 
@@ -67,7 +67,7 @@ class AuthError(BaseException):
 
 # Rate limiting — on-demand research job limit
 
-class RateLimitExceeded(BaseException):
+class RateLimitExceeded(ARCIPError):
     """
     Raised when a user exceeds the on-demand research trigger limit
     (10 jobs per user per day — enforced via Redis counter).
@@ -82,7 +82,7 @@ class RateLimitExceeded(BaseException):
 
 # External service errors — raised when Tavily, Serper, Apify, or Resend fail
 
-class ServiceError(BaseException):
+class ServiceError(ARCIPError):
     """
     Raised when an external API call (Tavily, Serper, Apify, Resend)
     fails after all retries.
@@ -97,7 +97,7 @@ class ServiceError(BaseException):
 
 # Agent errors — raised when the LangGraph research pipeline fails
 
-class AgentError(BaseException):
+class AgentError(ARCIPError):
     """
     Raised when both the primary synthesis model (Claude Sonnet) AND the
     fallback model (DeepSeek V3) fail.
@@ -111,7 +111,7 @@ class AgentError(BaseException):
 
 # Research job errors — raised when a Celery job fails after all retries
 
-class ResearchJobError(BaseException):
+class ResearchJobError(ARCIPError):
     """
     Raised when a Celery research job fails after all retries are exhausted.
     The job's status is updated to "failed" in PostgreSQL before this is raised.
@@ -123,7 +123,7 @@ class ResearchJobError(BaseException):
 
 # Guardrail errors — raised when scraped content or generated reports fail safety checks
 
-class GuardrailError(BaseException):
+class GuardrailError(ARCIPError):
     """
     Base class for both input and output guardrail failures.
     Handled internally inside the agent pipeline — not normally surfaced
@@ -161,21 +161,21 @@ class OutputGuardrailError(GuardrailError):
         self.message = message
         super().__init__(message)
         
-class NotAuthenticated(BaseException):
+class NotAuthenticated(ARCIPError):
     """User is not authenticated"""
     def __init__(self, message: str = "Not Authenticated"):
             self.message = message
             super().__init__(message)
 
 
-class InvalidToken(BaseException):
+class InvalidToken(ARCIPError):
     """User has provided an invalid or expired token"""
 
     def __init__(self, message: str = "Invalid token or token expired"):
         self.message = message
         super().__init__(message)
 
-class AccessTokenRequired(BaseException):
+class AccessTokenRequired(ARCIPError):
     """User has provided a refresh token when an access token is needed"""
 
     def __init__(self, message: str = "Access token required"):
@@ -183,7 +183,7 @@ class AccessTokenRequired(BaseException):
         super().__init__(message)
 
 
-class RefreshTokenRequired(BaseException):
+class RefreshTokenRequired(ARCIPError):
     """User has provided an access token when a refresh token is needed"""
 
     def __init__(self, message: str = "Refresh token required"):

@@ -3,8 +3,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Column, DateTime, func
-from sqlmodel import Field, Relationship, SQLModel
+from sqlmodel import Column, DateTime, Field, Relationship, SQLModel, func
 
 from src.db.db_naming import metadata
 
@@ -26,8 +25,8 @@ class Competitor(SQLModel, table=True):
     """A competitor the user has added to track. One user can add many."""
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    user_id: uuid.UUID | None = Field(
-        default=None, foreign_key="user.id", index=True, ondelete="CASCADE"
+    user_id: uuid.UUID = Field(
+        foreign_key="user.id", index=True, ondelete="CASCADE"
     )
     # many-side — no cascade kwarg here; cascade lives on User.competitors
     user: "User | None" = Relationship(back_populates="competitors")

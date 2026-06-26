@@ -33,10 +33,10 @@ class Job(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
-    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
     user: "User | None" = Relationship(back_populates="jobs")
 
-    competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True)
+    competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True, ondelete="CASCADE")
     competitor: "Competitor | None" = Relationship(back_populates="jobs")
 
     job_type: JobType = Field(default=JobType.scheduled)  # "scheduled" | "on_demand" | "alert_scan"  (WF1 / WF2 / WF3)

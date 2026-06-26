@@ -7,17 +7,19 @@ services:
     container_name: fastapi_reve_dev
     ports:
       - "8020:8000"
+    volumes:
+      - .:/code
     develop:
       watch:
-        - action: sync
-          path: .
-          target: /code
-          ignore:
-            - __pycache__
-            - "**/__pycache__"
-            - "*.pyc"
-            - .env
-            - .git
+        # - action: sync
+        #   path: .
+        #   target: /code
+        #   ignore:
+        #     - __pycache__
+        #     - "**/__pycache__"
+        #     - "*.pyc"
+        #     - .env
+        #     - .git
         - action: rebuild
           path: requirements/dev.txt
         - action: rebuild
@@ -27,8 +29,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      # redis:
-      #   condition: service_healthy
+      redis:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -90,6 +92,8 @@ services:
       dockerfile: Dockerfile.dev
     container_name: celery_worker_dev
     command: celery -A src.celery_config:celery_app worker --loglevel=info
+    volumes:
+      - .:/code
     env_file:
       - .env
     depends_on:
@@ -105,6 +109,8 @@ services:
       dockerfile: Dockerfile.dev
     container_name: celery_beat_dev
     command: celery -A src.celery_config:celery_app beat --loglevel=info
+    volumes:
+      - .:/code
     env_file:
       - .env
     depends_on:

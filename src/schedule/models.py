@@ -33,14 +33,15 @@ class Schedule(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
-    user_id: uuid.UUID = Field(foreign_key="user.id", unique=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", unique=True, ondelete="CASCADE")
+    
     user: "User | None" = Relationship(
         back_populates="schedule",
     )
 
     frequency: ScheduleFrequency = Field(default=ScheduleFrequency.weekly)  # "weekly" | "daily"
     day_of_week: str | None = Field(default="Monday")  # used when frequency == "weekly"
-    time: time = Field(default=time(8, 0))  # e.g. 08:00
+    scheduled_time: time = Field(default=time(8, 0))  # e.g. 08:00
     timezone: str = Field(default="UTC")  # e.g. "Africa/Lagos", "Europe/London"
     status: ScheduleStatus = Field(default=ScheduleStatus.active)  # "active" | "paused"
     created_at: datetime | None = Field(

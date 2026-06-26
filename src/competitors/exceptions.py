@@ -1,4 +1,4 @@
-from src.exceptions import BaseException, NotFound
+from src.exceptions import ARCIPError, NotFound
 
 
 class CompetitorNotFound(NotFound):
@@ -8,14 +8,14 @@ class CompetitorNotFound(NotFound):
         super().__init__(message)
 
 
-class CompetitorAlreadyExists(BaseException):
+class CompetitorAlreadyExists(ARCIPError):
     """Raised when the user already tracks a competitor with this exact name."""
     def __init__(self, message: str = "You're already tracking a competitor with this name"):
         self.message = message
         super().__init__(message)
 
 
-class SourceDiscoveryFailed(BaseException):
+class SourceDiscoveryFailed(ARCIPError):
     """
     Raised by service.save_discovered_sources() in the (rare) case where
     every step of the discovery chain — robots.txt/sitemap, llms.txt,

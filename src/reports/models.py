@@ -29,11 +29,11 @@ class Report(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
-    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
     # many-side — no cascade kwarg; cascade lives on User.reports
     user: "User | None" = Relationship(back_populates="reports")
 
-    competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True)
+    competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True, ondelete="CASCADE")
     # many-side — no cascade kwarg; cascade lives on Competitor.reports
     competitor: "Competitor | None" = Relationship(back_populates="reports")
 
@@ -66,9 +66,9 @@ class Feedback(SQLModel, table=True):
     """
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    report_id: uuid.UUID = Field(foreign_key="report.id", unique=True,)
-    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
-    rating: int  # 1-5 stars
+    report_id: uuid.UUID = Field(foreign_key="report.id", unique=True, ondelete="CASCADE")
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
+    rating: int = Field(ge=1, le=5) # 1-5 stars
     comment: str | None = None  # optional — "what did we miss?"
 
     report: "Report | None" = Relationship(back_populates="feedback")

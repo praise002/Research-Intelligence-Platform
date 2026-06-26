@@ -10,7 +10,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from db.database import get_session
 from src.auth.dependencies import get_current_user
 from src.auth.models import User
 from src.competitors.dependencies import get_competitor_repository, valid_competitor_id
@@ -23,13 +22,9 @@ from src.competitors.schemas import (
     CompetitorUpdate,
 )
 from src.competitors.service import CompetitorService
-from src.db.database import init_db
+from src.db.database import get_session
 
 router = APIRouter()
-
-CurrentUser = Annotated[User, Depends(get_current_user)]
-DbSession = Annotated[AsyncSession, Depends(init_db)]
-ValidCompetitor = Annotated[Competitor, Depends(valid_competitor_id)]
 
 
 def get_competitor_service(
@@ -58,11 +53,14 @@ async def add_competitor(
     service: Annotated[CompetitorService, Depends(get_competitor_service)],
 ) -> Competitor:
     """
-    Adds a new competitor and immediately runs sub-URL discovery so
-    the competitor has sources ready for its first research run.
- 
-    Raises CompetitorAlreadyExists (422) if the name already exists
-    for this user.
+        Add a new competitor for the authenticated user.
+
+        Immediately runs sub-URL discovery so the competitor has sources
+        ready before its first research run.
+
+        Raises:
+            CompetitorAlreadyExists (422): a competitor with this name
+            already exists for the current user.
     """
     return await service.add_competitor(
         user_id=current_user.id,
@@ -77,8 +75,6 @@ async def get_competitor(
 ):
     """
     Returns one competitor with its full list of discovered sources.
-    valid_competitor_id() handles existence + ownership — if either
-    check fails this never runs and the caller gets a 404.
     """
     return competitor
 
@@ -87,7 +83,7 @@ async def get_competitor(
 async def update_competitor(
     competitor: Annotated[Competitor, Depends(valid_competitor_id)],
     updates: CompetitorUpdate,
-    service: CompetitorService = Depends(),
+    service: Annotated[CompetitorService, Depends(get_competitor_service)],
 ):
     """
     Partial update — only fields included in the request body are changed.
@@ -99,11 +95,9 @@ async def update_competitor(
 @router.delete("/{competitor_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_competitor(
     competitor: Annotated[Competitor, Depends(valid_competitor_id)],
-    service: CompetitorService = Depends(),
+    service: Annotated[CompetitorService, Depends(get_competitor_service)],
 ):
     """
-    Deletes the competitor. Cascade on the relationship handles
-    sources, reports, alerts, and jobs automatically — no manual
-    child deletion needed here.
+    Delete a competitor and all dependent data.
     """
     await service.delete_competitor(competitor)

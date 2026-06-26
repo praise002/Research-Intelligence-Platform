@@ -38,7 +38,7 @@ class User(SQLModel, table=True):
     first_name: str = Field(max_length=50, min_length=1)
     last_name: str = Field(max_length=50, min_length=1)
     company: str | None = Field(default=None, max_length=50)
-    email: EmailStr = Field(unique=True, index=True, max_length=255)
+    email: EmailStr = Field(unique=True, max_length=255)
     google_id: str | None = Field(
         sa_column=Column(String(50), unique=True), default=None
     )

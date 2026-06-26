@@ -1,3 +1,4 @@
+import enum
 import uuid
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
@@ -12,6 +13,12 @@ if TYPE_CHECKING:
 
 SQLModel.metadata = metadata
 
+class SignalType(str, enum.Enum):
+    pricing = "pricing"
+    feature = "feature"
+    news = "news"
+    social = "social"
+
 class Alert(SQLModel, table=True):
     """
     A real-time signal detected for one competitor — e.g. a pricing change.
@@ -21,13 +28,13 @@ class Alert(SQLModel, table=True):
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
-    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
     user: "User | None" = Relationship(back_populates="alerts")
 
-    competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True)
+    competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True, ondelete="CASCADE")
     competitor: "Competitor | None" = Relationship(back_populates="alerts")
 
-    signal_type: str  # "pricing" | "feature" | "news" | "social"
+    signal_type: SignalType   # "pricing" | "feature" | "news" | "social"
     content: str  # short summary of what changed
     delivered_at: datetime | None = None  # set when the alert email / push is sent
     created_at: datetime = Field(

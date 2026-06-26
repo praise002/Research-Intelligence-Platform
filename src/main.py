@@ -19,7 +19,7 @@ from src.competitors.router import router as competitors_router
 from src.config import settings
 from src.custom_logging import get_logger, setup_logging
 from src.db.database import async_engine, init_db
-from src.errors import register_global_error_handlers
+from src.error_registry import register_all_error_handlers
 from src.limiter import limiter
 from src.middleware import register_middleware
 
@@ -74,7 +74,7 @@ app = FastAPI(
     },
 )
 
-register_global_error_handlers(app)
+register_all_error_handlers(app)
 
 register_middleware(app)
 
