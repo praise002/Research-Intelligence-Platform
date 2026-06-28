@@ -1,7 +1,7 @@
 import enum
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Column, DateTime, Field, Relationship, SQLModel, func
 
@@ -31,11 +31,11 @@ class Report(SQLModel, table=True):
 
     user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
     # many-side — no cascade kwarg; cascade lives on User.reports
-    user: "User | None" = Relationship(back_populates="reports")
+    user: Optional["User"] = Relationship(back_populates="reports")
 
     competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True, ondelete="CASCADE")
     # many-side — no cascade kwarg; cascade lives on Competitor.reports
-    competitor: "Competitor | None" = Relationship(back_populates="reports")
+    competitor: Optional["Competitor"] = Relationship(back_populates="reports")
 
     content: str  # full report in markdown — SWOT, trends, executive summary
     quality_score: float | None = None
@@ -43,7 +43,7 @@ class Report(SQLModel, table=True):
     status: ReportStatus = Field(default=ReportStatus.pending)
 
     # one-to-one — cascade lives here, since Report is the "owning" side
-    feedback: "Feedback | None" = Relationship(
+    feedback: Optional["Feedback"] = Relationship(
         back_populates="report",
         sa_relationship_kwargs={"cascade": "all, delete-orphan", "uselist": False},
     )
@@ -71,8 +71,8 @@ class Feedback(SQLModel, table=True):
     rating: int = Field(ge=1, le=5) # 1-5 stars
     comment: str | None = None  # optional — "what did we miss?"
 
-    report: "Report | None" = Relationship(back_populates="feedback")
-    user: "User | None" = Relationship(back_populates="feedback")
+    report: Optional["Report"] = Relationship(back_populates="feedback")
+    user: Optional["User"] = Relationship(back_populates="feedback")
 
     created_at: datetime | None = Field(
         default=None,

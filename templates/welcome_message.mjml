@@ -1,28 +1,96 @@
 <mjml>
-  <mj-body background-color="#f9f9f9">
-    <mj-section padding="20px 0">
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Inter, Helvetica Neue, Helvetica, Arial, sans-serif" />
+      <mj-text color="#374151" line-height="1.6" />
+    </mj-attributes>
+    <mj-style>
+      .feature-item { margin-bottom: 8px; }
+    </mj-style>
+  </mj-head>
+
+  <mj-body background-color="#f3f4f6">
+
+    <!-- Header -->
+    <mj-section padding="32px 0 0 0">
       <mj-column>
-        <mj-text align="center" font-size="20px" color="#333" font-family="Ubuntu, Helvetica, Arial, sans-serif">
+        <mj-text align="center" font-size="22px" font-weight="700" color="#111827" letter-spacing="-0.5px">
           {{ project_name }}
         </mj-text>
+        <mj-text align="center" font-size="13px" color="#6b7280" padding-top="0">
+          Reve Research AI
+        </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section background-color="#ffffff" padding="40px 25px" border-radius="4px">
+
+    <!-- Main card -->
+    <mj-section background-color="#ffffff" border-radius="8px" padding="40px 32px" css-class="main-card">
       <mj-column>
-        <mj-text font-size="18px" color="#737f8d" font-family="Whitney, Helvetica Neue, Helvetica, Arial, sans-serif">
-          <b>Hey {{ name }},</b>
+
+        <!-- Greeting -->
+        <mj-text font-size="24px" font-weight="700" color="#111827" padding-bottom="8px">
+          Welcome, {{ name }} 👋
         </mj-text>
-        <mj-text font-size="16px" color="#737f8d" font-family="Whitney, Helvetica Neue, Helvetica, Arial, sans-serif">
-          Welcome to {{ project_name }}! We're excited to have you on board.
+
+        <mj-text font-size="15px" color="#4b5563" padding-bottom="4px">
+          Your account is set up and ready. {{ project_name }} will now automatically research your competitors and deliver structured intelligence reports straight to your inbox — no manual work needed.
         </mj-text>
-        <mj-text font-size="16px" color="#737f8d" font-family="Whitney, Helvetica Neue, Helvetica, Arial, sans-serif">
-          Your account verification is complete, and you're all set to connect with developers, share your projects, and collaborate on exciting new ideas.
+
+        <mj-divider border-color="#e5e7eb" border-width="1px" padding="20px 0" />
+
+        <!-- What happens next -->
+        <mj-text font-size="13px" font-weight="700" color="#6b7280" letter-spacing="0.5px" padding-bottom="4px">
+          WHAT HAPPENS NEXT
         </mj-text>
-        <mj-divider border-color="#eee" border-width="1px" />
-        <mj-text align="center" font-size="12px" color="#99aab5">
-          <a href="{{ frontend_host }}" style="color:#1eb0f4;text-decoration:none;">Visit our site</a> • @company-name
+
+        <mj-text font-size="15px" color="#374151" padding-bottom="4px">
+          <b>1. Add your competitors</b><br />
+          Tell us who you're tracking — just a name and their website URL.
+        </mj-text>
+
+        <mj-text font-size="15px" color="#374151" padding-bottom="4px">
+          <b>2. Set your schedule</b><br />
+          Choose daily or weekly. Reports arrive in your inbox automatically.
+        </mj-text>
+
+        <mj-text font-size="15px" color="#374151" padding-bottom="20px">
+          <b>3. Get your first report</b><br />
+          Or trigger one right now — results in under 30 minutes.
+        </mj-text>
+
+        <!-- CTA -->
+        <mj-button
+          background-color="#111827"
+          color="#ffffff"
+          font-size="15px"
+          font-weight="600"
+          border-radius="6px"
+          padding="14px 28px"
+          href="{{ frontend_host }}/dashboard"
+          inner-padding="14px 28px"
+        >
+          Go to your dashboard →
+        </mj-button>
+
+        <mj-divider border-color="#e5e7eb" border-width="1px" padding="28px 0 12px 0" />
+
+        <!-- Footer note -->
+        <mj-text font-size="13px" color="#9ca3af" align="center">
+          Questions? Reply to this email — we read every one.<br />
+          <a href="{{ frontend_host }}" style="color:#6b7280;text-decoration:none;">{{ frontend_host }}</a>
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <!-- Bottom spacing -->
+    <mj-section padding="24px 0">
+      <mj-column>
+        <mj-text align="center" font-size="12px" color="#9ca3af">
+          © 2026 {{ project_name }}. You're receiving this because you signed up.
         </mj-text>
       </mj-column>
     </mj-section>
+
   </mj-body>
 </mjml>

@@ -111,7 +111,7 @@ async def logout_all(
 Initiates the Google OAuth flow. This endpoint performs a browser redirect —
 it will not work correctly in Swagger UI. To test:
 
-1. Copy the full URL: `http://127.0.0.1:8000/api/v1/auth/google`
+1. Copy the full URL: `http://127.0.0.1:8020/api/v1/auth/google`
 2. Paste it directly into your browser's address bar
 3. After authenticating, you will be redirected back to the callback URL
     """,

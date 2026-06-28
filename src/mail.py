@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 import jinja2
+import resend
 from fastapi import BackgroundTasks
 from fastapi_mail import FastMail, MessageSchema, MessageType
 from mjml import mjml2html
@@ -16,30 +17,19 @@ templates_env = jinja2.Environment(
     autoescape=True,
 )
 
+resend.api_key = settings.RESEND_API_KEY
 
 def get_email_template_data(email_type: str) -> dict:
     """
     Returns the appropriate template file and subject based on email type.
 
     Args:
-        email_type: Type of email ('activate', 'reset', 'reset-success', 'welcome')
+        email_type: Type of email ('welcome', 'test')
 
     Returns:
         dict: Contains 'template_name' and 'subject'
     """
     email_templates = {
-        "activate": {
-            "template_name": "verify_email_request.mjml",
-            "subject": "Verify your email",
-        },
-        "reset": {
-            "template_name": "password_reset_email.mjml",
-            "subject": "Reset Your Password",
-        },
-        "reset-success": {
-            "template_name": "password_reset_success.mjml",
-            "subject": "Password Reset Successful",
-        },
         "welcome": {
             "template_name": "welcome_message.mjml",
             "subject": "Account Verified",
@@ -62,7 +52,7 @@ def render_mjml_template(template_name: str, context: dict) -> str:
     return mjml2html(mjml_content)
 
 
-def send_email(
+def  _send_via_fastmail(
     background_tasks: BackgroundTasks,
     subject: str,
     email_to: str,
@@ -94,6 +84,43 @@ def send_email(
         message,
     )
 
+def _send_via_resend(
+    subject: str,
+    email_to: str,
+    html: str,
+) -> None:
+    """
+    Sends via Resend API — used in production.
+    Resend handles delivery, retries, and bounce tracking.
+    FROM address must be a verified domain on your Resend account.
+    """
+    resend.Emails.send({
+        "from": settings.RESEND_FROM_EMAIL,
+        "to": email_to,
+        "subject": subject,
+        "html": html,
+    })
+    
+def send_email(
+    background_tasks: BackgroundTasks,
+    subject: str,
+    email_to: str,
+    template_context: dict,
+    template_name: str,
+) -> None:
+    """
+    Renders the template and routes to the right provider based on environment.
+ 
+    Production  → Resend (runs in background task to avoid blocking the request)
+    Local/dev   → FastMail SMTP
+    """
+    compiled_html = render_mjml_template(template_name, template_context)
+ 
+    if settings.ENVIRONMENT == "production":
+        # Run Resend in a background task so it doesn't block the response
+        background_tasks.add_task(_send_via_resend, subject, email_to, compiled_html)
+    else:
+        _send_via_fastmail(background_tasks, subject, email_to, compiled_html)
 
 def send_email_by_type(
     background_tasks: BackgroundTasks,

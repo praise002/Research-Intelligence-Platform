@@ -1,14 +1,13 @@
-from src.auth.models import UserRole
-from src.auth.models import UserPlan
-from datetime import datetime
 import uuid
+from datetime import datetime
 from typing import Self
 
-from pydantic import BaseModel, Field, model_validator, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
 
-from src.auth.schemas import UserBase
+from src.auth.models import UserPlan
 
-class UserUpdate(BaseModel):
+
+class ProfileUpdate(BaseModel):
     first_name: str | None = Field(default=None, min_length=1, max_length=50)
     last_name: str | None = Field(default=None, min_length=1, max_length=50)
     company: str | None = Field(default=None, min_length=1, max_length=50)
@@ -21,12 +20,13 @@ class UserUpdate(BaseModel):
             raise ValueError("No spacing allowed in last_name")
         return self
 
-class UserRead(UserBase):
+class ProfileResponse(BaseModel):
     id: uuid.UUID
-    company: str | None 
-    role: UserRole
+    first_name: str
+    last_name: str
+    email: EmailStr
+    company: str | None
     plan: UserPlan
     created_at: datetime
-    
-    
+ 
     model_config = ConfigDict(from_attributes=True)

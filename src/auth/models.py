@@ -1,7 +1,7 @@
 import enum
 import uuid
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import EmailStr
 from sqlalchemy import Column, DateTime, String, func
@@ -69,7 +69,7 @@ class User(SQLModel, table=True):
         back_populates="user",
         sa_relationship_kwargs={"cascade": "all, delete-orphan"},
     )
-    schedule: "Schedule | None" = Relationship(
+    schedule: Optional["Schedule"] = Relationship(
         back_populates="user",
         sa_relationship_kwargs={
             "cascade": "all, delete-orphan",

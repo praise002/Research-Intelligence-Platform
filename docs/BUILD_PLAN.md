@@ -470,23 +470,23 @@ Build progress tracker. Check off each step as completed.
 
 ## Phase 15: Profile Module
 
-- [ ] **15.1** Create `src/profile/schemas.py`
+- [X] **15.1** Create `src/profile/schemas.py`
   - ProfileResponse (id, name, email, company, plan, created_at)
   - ProfileUpdate (name?, company?)
 
-- [ ] **15.2** Create `src/profile/repository.py`
+- [X] **15.2** Create `src/profile/repository.py`
   - get_by_user_id(user_id) → User | None
   - update_profile(user_id, name?, company?) → User
 
-- [ ] **15.3** Create `src/profile/service.py`
+- [X] **15.3** Create `src/profile/service.py`
   - get_profile(user_id) → ProfileResponse
   - update_profile(user_id, updates) → ProfileResponse
 
-- [ ] **15.4** Create `src/profile/exceptions.py` and `src/profile/errors.py`
+- [X] **15.4** Create `src/profile/exceptions.py` and `src/profile/errors.py`
   - ProfileNotFound
   - PRF_001: Not found
 
-- [ ] **15.5** Create `src/profile/router.py`
+- [X] **15.5** Create `src/profile/router.py`
   - GET /profile — view current user's profile
   - PATCH /profile — update name or company
 

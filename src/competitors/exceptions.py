@@ -1,11 +1,11 @@
-from src.exceptions import ARCIPError, NotFound
+from src.exceptions import ARCIPError
 
 
-class CompetitorNotFound(NotFound):
-    def __init__(self, message: str = "Competitor not found"):
-        """Raised when a competitor doesn't exist, or exists but belongs to a different user"""
-        self.message = message
-        super().__init__(message)
+# class CompetitorNotFound(NotFound):
+#     def __init__(self, message: str = "Competitor not found"):
+#         """Raised when a competitor doesn't exist, or exists but belongs to a different user"""
+#         self.message = message
+#         super().__init__(message)
 
 
 class CompetitorAlreadyExists(ARCIPError):

@@ -1,7 +1,7 @@
 import enum
 import uuid
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Column, DateTime, Field, Relationship, SQLModel, func
 
@@ -34,10 +34,10 @@ class Job(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
 
     user_id: uuid.UUID = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
-    user: "User | None" = Relationship(back_populates="jobs")
+    user: Optional["User"] = Relationship(back_populates="jobs")
 
     competitor_id: uuid.UUID = Field(foreign_key="competitor.id", index=True, ondelete="CASCADE")
-    competitor: "Competitor | None" = Relationship(back_populates="jobs")
+    competitor: Optional["Competitor"] = Relationship(back_populates="jobs")
 
     job_type: JobType = Field(default=JobType.scheduled)  # "scheduled" | "on_demand" | "alert_scan"  (WF1 / WF2 / WF3)
     status: JobStatus = Field(default=JobStatus.pending)  # "pending" | "running" | "completed" | "failed"

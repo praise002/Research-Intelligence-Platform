@@ -25,6 +25,7 @@ REFRESH_TOKEN_RESPONSES = {
         "content": {
             "application/json": {
                 "example": {
+                    "status": "success",
                     "message": "Token refreshed successfully",
                     "access_token": ACCESS_TOKEN_EXAMPLE,
                     "refresh_token": REFRESH_TOKEN_EXAMPLE,
@@ -76,6 +77,7 @@ LOGOUT_ALL_RESPONSES = {
         "content": {
             "application/json": {
                 "example": {
+                    "status": "success",
                     "message": "Logged out of all devices successfully",
                 }
             }

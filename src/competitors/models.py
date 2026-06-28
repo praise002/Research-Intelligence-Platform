@@ -1,7 +1,7 @@
 import enum
 import uuid
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Column, DateTime, Field, Relationship, SQLModel, func
 
@@ -29,10 +29,10 @@ class Competitor(SQLModel, table=True):
         foreign_key="user.id", index=True, ondelete="CASCADE"
     )
     # many-side — no cascade kwarg here; cascade lives on User.competitors
-    user: "User | None" = Relationship(back_populates="competitors")
+    user: Optional["User"] = Relationship(back_populates="competitors")
 
-    name: str  # e.g. "Grey"
-    main_url: str  # e.g. "grey.com" — provided by user at onboarding
+    name: str = Field(min_length=1, max_length=50)  # e.g. "Grey"
+    main_url: str = Field(min_length=1)  # e.g. "grey.com" — provided by user at onboarding
 
     competitor_sources: list["CompetitorSource"] | None = Relationship(
         back_populates="competitor",
@@ -72,7 +72,7 @@ class CompetitorSource(SQLModel, table=True):
     competitor_id: uuid.UUID = Field(
         foreign_key="competitor.id", index=True, ondelete="CASCADE"
     )
-    competitor: "Competitor | None" = Relationship(back_populates="competitor_sources")
+    competitor: Optional["Competitor"] = Relationship(back_populates="competitor_sources")
     url: str
     source_type: SourceType  # "website" | "social" | "news" | "review"
     last_scraped_at: datetime | None = None  # set after each successful scrape

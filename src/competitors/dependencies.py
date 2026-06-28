@@ -16,18 +16,17 @@ Security note: we return 404 for both "not found" and "found but belongs
 to another user" — returning 403 would confirm the resource exists,
 leaking competitor IDs across user accounts (resource enumeration attack).
 """
-
 import uuid
 
 from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.auth.dependencies import get_current_user
-from src.competitors.exceptions import CompetitorNotFound
 from src.competitors.models import Competitor
 from src.competitors.repository import CompetitorRepository
 from src.db.database import get_session
 from src.db.models import User
+from src.exceptions import NotFound
 
 
 def get_competitor_repository(
@@ -62,6 +61,6 @@ async def valid_competitor_id(
     competitor = await repo.get_by_id(competitor_id)
 
     if not competitor or competitor.user_id != current_user.id:
-        raise CompetitorNotFound()
+        raise NotFound("Competitor not found")
 
     return competitor

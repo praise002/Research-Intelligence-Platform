@@ -11,9 +11,11 @@ from fastapi.routing import APIRoute
 
 # from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from redis import asyncio as aioredis
 from starlette_admin.contrib.sqla import Admin
 from tenacity import retry, stop_after_delay, wait_fixed
 
+from src.auth.redis import RedisService
 from src.auth.router import router as auth_router
 from src.competitors.router import router as competitors_router
 from src.config import settings
@@ -22,6 +24,7 @@ from src.db.database import async_engine, init_db
 from src.error_registry import register_all_error_handlers
 from src.limiter import limiter
 from src.middleware import register_middleware
+from src.profile.router import router as profile_router
 
 if settings.LANGCHAIN_TRACING_V2:
     os.environ["LANGCHAIN_TRACING_V2"] = "true"
@@ -58,7 +61,14 @@ async def lifespan(app: FastAPI):
         await wait_for_db()   # wait for postgres to accept connections
         await init_db()       # create sql tables
 
+    redis_client = aioredis.from_url(
+        settings.REDIS_URL,
+        encoding="utf-8",
+        decode_responses=True,
+    )
+    app.state.redis = RedisService(redis_client)
     yield  
+    await redis_client.aclose()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -95,6 +105,7 @@ admin = Admin(async_engine, title="Reve Research AI")
 admin.mount_to(app)
 
 app.include_router(auth_router, prefix=f"/api/{version}/auth", tags=["Auth"])
+app.include_router(profile_router, prefix=f"/api/{version}/profile", tags=["Profile"])
 app.include_router(competitors_router, prefix=f"/api/{version}/competitors", tags=["Competitors"])
 
 @retry(stop=stop_after_delay(30), wait=wait_fixed(1))

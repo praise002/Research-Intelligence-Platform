@@ -85,7 +85,7 @@ class Settings(BaseSettings):
 
     # ── Email Delivery 
     RESEND_API_KEY: str               # transactional email for report and alert delivery
-    RESEND_FROM_EMAIL: str = "reports@reve.com"
+    RESEND_FROM_EMAIL: str 
 
     # ── Retry Configuration (Tenacity) 
     LLM_RETRY_COUNT: int = 3

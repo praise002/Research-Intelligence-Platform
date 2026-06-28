@@ -1,7 +1,7 @@
 import enum
 import uuid
 from datetime import datetime, time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlmodel import Column, DateTime, Field, Relationship, SQLModel, func
 
@@ -35,7 +35,7 @@ class Schedule(SQLModel, table=True):
 
     user_id: uuid.UUID = Field(foreign_key="user.id", unique=True, ondelete="CASCADE")
     
-    user: "User | None" = Relationship(
+    user: Optional["User"] = Relationship(
         back_populates="schedule",
     )
 
