@@ -189,7 +189,7 @@ Build progress tracker. Check off each step as completed.
 
 ## Phase 7: Agent — Foundation
 
-- [ ] **7.1** Create `src/agent/state.py` — ResearchState
+- [X] **7.1** Create `src/agent/state.py` — ResearchState
   - TypedDict with all fields passed between LangGraph nodes:
     - competitor_name, competitor_id, user_id, job_id
     - request_type (WF1, WF2, WF3)
@@ -200,21 +200,21 @@ Build progress tracker. Check off each step as completed.
     - report_content, is_sufficient
     - correlation_id
 
-- [ ] **7.2** Create `src/agent/prompts/` — All 5 prompt templates
+- [X] **7.2** Create `src/agent/prompts/` — All 5 prompt templates
   - `router_v1.yaml` — classify request type from job metadata
   - `query_generator_v1.yaml` — generate web, news, social queries with XML tags, role, few-shot examples, tool docs
   - `summarise_v1.yaml` — per-source summarisation (run on each source individually)
   - `synthesise_v1.yaml` — merge all summaries into coherent analysis, evidence before conclusions
   - `evaluate_v1.yaml` — grade report on coverage, accuracy, actionability, structure (1-5 per dimension)
 
-- [ ] **7.3** Create `src/agent/guardrails/input_guards.py`
+- [X] **7.3** Create `src/agent/guardrails/input_guards.py`
   - check_prompt_injection(content) — detect and strip instruction-like text from scraped content
   - redact_pii(content) — strip emails, phone numbers, personal names
   - filter_language(content) — discard non-English content
   - check_content_quality(content) — truncate oversized, score relevance, discard low quality
   - run_all_input_guards(sources) → cleaned_sources
 
-- [ ] **7.4** Create `src/agent/guardrails/output_guards.py`
+- [X] **7.4** Create `src/agent/guardrails/output_guards.py`
   - check_minimum_length(report) — under 500 words → fail
   - check_source_citations(report) — zero citations → fail
   - check_required_sections(report) — SWOT, trends, summary must exist → fail if missing
